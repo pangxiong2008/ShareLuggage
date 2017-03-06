@@ -68,9 +68,9 @@
                 </button>
                 @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>-->
-            <div class="navbar-collapse collapse">
-                <ul class="nav navbar-nav">
-                     <li>@Html.ActionLink("共享带物", "Index", "Home", new { area = "" }, null)</li>
+            <div class="navbar-collapse collapse navbar-brand">
+                <ul class="nav nav-pills">
+                     <li class="active">@Html.ActionLink("共享带物", "Index", "Home", new { area = "" }, null)</li>
                      <li>@Html.ActionLink("待运", "Index", "Home", new { area = "" }, null)</li>
                     <li>@Html.ActionLink("共享", "Index", "Help", new { area = "" }, null)</li>
                     <li>@Html.ActionLink("专业", "Index", "Help", new { area = "" }, null)</li>
@@ -79,6 +79,8 @@
                 </ul>
                <!-- @Html.Partial("_LoginPartial")-->
             </div>
+
+            <div class="navbar-collapse collapse navbar-brand navbar-right">Welcome-Guest:@DateTime.Now</div>
         </div>
     </div>
     <div class="container body-content">
