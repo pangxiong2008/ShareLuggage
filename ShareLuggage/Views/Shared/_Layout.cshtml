@@ -19,7 +19,8 @@
                 </button>
                 @Html.ActionLink("Application name", "Index", "Home", new { area = "" }, new { @class = "navbar-brand" })
             </div>
-            <div class="navbar-collapse collapse">
+            
+            <div class="navbar-collapse collapse navbar-right ">
                 <!--<ul class="nav navbar-nav">
                     <li>@Html.ActionLink("Home", "Index", "Home")</li>
                     <li>@Html.ActionLink("About", "About", "Home")</li>
@@ -27,6 +28,34 @@
                 </ul>-->
                 @Html.Partial("_LoginPartial")
             </div>
+
+            <div class="navbar-collapse collapse navbar-right navbar-brand">
+                
+                <div class="dropdown">
+                    <button class="btn btn-default dropdown-toggle" type="button" id="menu1" data-toggle="dropdown">
+                        语言
+                        <span class="caret"></span>
+                    </button>
+                    <ul class="dropdown-menu" role="menu" aria-labelledby="menu1">
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">中文</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">English</a></li>
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">French</a></li>
+                       
+                        <li role="presentation"><a role="menuitem" tabindex="-1" href="#">Spanish</a></li>
+                    </ul>
+                </div>
+                 
+            </div>
+            <div class="navbar-left">
+     <div >
+        <div class="input-group navbar-brand">
+            <input type="text" class="form-control " placeholder="搜索">
+            <span class="input-group-btn">
+                <button class="btn btn-info" type="button"><span class="glyphicon glyphicon-search"></span></button>
+            </span>
+        </div>
+    </div>
+</div>
         </div>
     </div>
      <div class="navbar">
