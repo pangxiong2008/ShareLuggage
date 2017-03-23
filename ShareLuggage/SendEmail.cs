@@ -42,34 +42,34 @@ namespace ShareLuggage.Email
 
     class Send_Gmail
     {
-        static void Main()
+        private void send(Email_raw _Email_raw)
         {
-            Console.WriteLine("Google Calender API v3");
+            EmailConfig _EmailConfig = new EmailConfig();
+           // Email_raw _Email_raw = new Email_raw();
 
-            var clientId = ConfigurationManager.AppSettings["ClientId"];
-            clientId = "739330450434-e4cq0bonlglucdnmodofbjg09qj26u36.apps.googleusercontent.com";
-            var clientSecret = ConfigurationManager.AppSettings["ClientSecret"];
-            clientSecret = "dfDfdOJeobb1x0VNrTDHsEGO";
-            var senderName = ConfigurationManager.AppSettings["EmailSenderName"];
-            var senderAddress = ConfigurationManager.AppSettings["EmailSenderAddress"];
-            var receiverName = ConfigurationManager.AppSettings["EmailReceiverName"];
-            var receiverAddress = ConfigurationManager.AppSettings["EmailReceiverAddress"];
+            _EmailConfig.clientId = "739330450434-e4cq0bonlglucdnmodofbjg09qj26u36.apps.googleusercontent.com";
+            //  var clientSecret = ConfigurationManager.AppSettings["ClientSecret"];
+            _EmailConfig.clientSecret = "dfDfdOJeobb1x0VNrTDHsEGO";
+            //var senderName = ConfigurationManager.AppSettings["EmailSenderName"];
+            //var senderAddress = ConfigurationManager.AppSettings["EmailSenderAddress"];
+            //var receiverName = ConfigurationManager.AppSettings["EmailReceiverName"];
+            //var receiverAddress = ConfigurationManager.AppSettings["EmailReceiverAddress"];
 
             try
             {
-                var credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
+                _EmailConfig.credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
                     new ClientSecrets
                     {
-                        ClientId = clientId,
-                        ClientSecret = clientSecret,
+                        ClientId = _EmailConfig.clientId,
+                        ClientSecret = _EmailConfig.clientSecret,
                     },
                     new[] { GmailService.Scope.GmailCompose },
                     "user",
                     CancellationToken.None).Result;
 
-                var service = new GmailService(new BaseClientService.Initializer
+                _EmailConfig.service = new GmailService(new BaseClientService.Initializer
                 {
-                    HttpClientInitializer = credential,
+                    HttpClientInitializer = _EmailConfig.credential,
                     ApplicationName = "Gmail API",
                 });
 
@@ -78,17 +78,17 @@ namespace ShareLuggage.Email
                 // use that as a working base
                 // the values Date and Message-ID have no bearing on the final email (or didn't to me) so have keep them as placeholders and haven't tried to replace them
 
-                const string subject = "Email Subject";
+               // const string subject = "Email Subject";
 
                 // there are some issues around the body encoding/decoding
                 // this message decoded will have a '5' at the end
                 // a full stop at the end will make an invalid raw parameter
                 // but this was good enough for my purposes...
-                const string body = "Hello this is an email wriien by a very simple console application";
-                senderName = "51ShareLuggage";
-                senderAddress = "51ShareLuggage@gmail.com";
-                receiverName = "pangxiong";
-                receiverAddress = "wuxiaonong@gmail.com";
+                //const string body = "Hello this is an email wriien by a very simple console application";
+                //senderName = "51ShareLuggage";
+                //senderAddress = "51ShareLuggage@gmail.com";
+                //receiverName = "pangxiong";
+                //receiverAddress = "wuxiaonong@gmail.com";
                 // format the message
                 var text = string.Format("From: {0} <{1}>\nTo: {2} <{3}>\nSubject: {4}\nDate: Fri, 21 Nov 1997 09:55:06 -0600\nMessage-ID: <1234@local.machine.example>\n\n{5}",
                     senderName,
@@ -114,17 +114,11 @@ namespace ShareLuggage.Email
                 Console.WriteLine(
                     string.IsNullOrEmpty(request.Id) ? "Issue sending, returned id: {0}" : "Email looks good, id populated: {0}",
                     request.Id);
-            }
-            catch (Exception e)
-            {
-                Console.WriteLine("Exception encountered: {0}", e.Message);
-            }
 
-            Console.WriteLine("Press any key to continue...");
 
-            while (!Console.KeyAvailable)
-            {
+
             }
-        }
+       
+            }
+          
     }
-}
