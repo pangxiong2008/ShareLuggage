@@ -17,16 +17,26 @@ namespace ShareLuggage.Email
     }
     class Email_raw
     {
+         // clientSecret = "dfDfdOJeobb1x0VNrTDHsEGO";
+        public string senderName { get; set; }
+        public string senderAddress { get; set; }
+        public string receiverName { get; set; }
+        public string receiverAddress { get; set; }
+        public string subject { set; get; }
+        public string body { set; get; }
+    }
+
+      
+
+   
+    class EmailConfig
+    {
         public string clientId { get; set; }
-        public string clientId = "739330450434-e4cq0bonlglucdnmodofbjg09qj26u36.apps.googleusercontent.com";
-            var clientSecret = ConfigurationManager.AppSettings["ClientSecret"];
-        clientSecret = "dfDfdOJeobb1x0VNrTDHsEGO";
-            var senderName = ConfigurationManager.AppSettings["EmailSenderName"];
-        var senderAddress = ConfigurationManager.AppSettings["EmailSenderAddress"];
-        var receiverName = ConfigurationManager.AppSettings["EmailReceiverName"];
-        var receiverAddress = ConfigurationManager.AppSettings["EmailReceiverAddress"];
-
-
+        //public string clientId = "739330450434-e4cq0bonlglucdnmodofbjg09qj26u36.apps.googleusercontent.com";
+        public string clientSecret { get; set; }
+        public string ApplicationName { get; set; }
+        public UserCredential credential { get; set; }
+        public GmailService service { get; set; }
     }
 
 
