@@ -2,9 +2,8 @@
 using System.Configuration;
 using System.Text;
 using System.Threading;
-using Microsoft.Owin.Security.Google.Apis.Auth.OAuth2;
+using Google.Apis.Auth.OAuth2;
 using Google.Apis.Gmail.v1;
-using Google.Apis.Gmail.v1.Data;
 using Google.Apis.Services;
 
 namespace ShareLuggage.Email
