@@ -14,15 +14,15 @@ namespace ShareLuggage.Email
         public abstract void Email_create();
 
     }
-   public   class Email_goolge:Email
+    public class Email_goolge : Email
     {
         // abstract public void Create_draft();
         private string type;
-       public  Email_goolge()
+        public Email_goolge()
         {
             type = "simple";
         }
-       public  Email_goolge(string Type)
+        public Email_goolge(string Type)
         {
             type = Type;
         }
@@ -31,13 +31,13 @@ namespace ShareLuggage.Email
         {
 
         }
-        
 
-      
+
+
     }
     public class EmailSimpleFactory
     {
-        public Email createEmail(string Type)
+        public static Email createEmail(string Type)
         {
             Email _email = null;
             if (Type.Equals("Gmail_Connect"))
@@ -55,7 +55,7 @@ namespace ShareLuggage.Email
     }
     class Email_raw
     {
-         // clientSecret = "dfDfdOJeobb1x0VNrTDHsEGO";
+        // clientSecret = "dfDfdOJeobb1x0VNrTDHsEGO";
         public string senderName { get; set; }
         public string senderAddress { get; set; }
         public string receiverName { get; set; }
@@ -67,7 +67,7 @@ namespace ShareLuggage.Email
 
     public sealed class Singleton_sendEmail
     {
-        private static  Singleton_sendEmail single_gmail = new Singleton_sendEmail();
+        private static Singleton_sendEmail single_gmail = new Singleton_sendEmail();
 
         private static object Lock = new object();
         private Singleton_sendEmail()
@@ -81,7 +81,7 @@ namespace ShareLuggage.Email
                     lock (Lock)
                     {
                         if (single_gmail == null)
-                        { 
+                        {
                             single_gmail = new Singleton_sendEmail();
                         }
                     }
@@ -90,10 +90,32 @@ namespace ShareLuggage.Email
                 return single_gmail;
             }
 
-        } 
+        }
 
     }
-   
+
+
+    public class SingeCharge
+    {
+        private static SingeCharge SendSms;
+
+        private static readonly object Locker = new object();
+        private SingeCharge()
+        { }
+        public static SingeCharge send()
+        {
+            lock (Locker)
+            {
+                if (SendSms == null)
+                {
+                    SendSms = new SingeCharge();
+                }
+            }
+            return SendSms;
+        }
+
+    }
+
     class EmailConfig
     {
         public string clientId { get; set; }
@@ -104,21 +126,29 @@ namespace ShareLuggage.Email
         public GmailService service { get; set; }
     }
 
+    class EmailResult
+    {
+        public string ResultCode { get; set; }
+        public string ResultText { get; set; }
+        public string ResultBody { get; set; }
+
+    }
+
 
 
     class Send_Gmail
     {
-        private void send(Email_raw _Email_raw, EmailConfig _EmailConfig)
+        private EmailResult send(Email_raw _Email_raw, EmailConfig _EmailConfig)
         {
-           // EmailConfig _EmailConfig = new EmailConfig();
-           // _EmailConfig.clientId = "739330450434-e4cq0bonlglucdnmodofbjg09qj26u36.apps.googleusercontent.com";
+            // EmailConfig _EmailConfig = new EmailConfig();
+            // _EmailConfig.clientId = "739330450434-e4cq0bonlglucdnmodofbjg09qj26u36.apps.googleusercontent.com";
             //  var clientSecret = ConfigurationManager.AppSettings["ClientSecret"];
-           // _EmailConfig.clientSecret = "dfDfdOJeobb1x0VNrTDHsEGO";
+            // _EmailConfig.clientSecret = "dfDfdOJeobb1x0VNrTDHsEGO";
             //var senderName = ConfigurationManager.AppSettings["EmailSenderName"];
             //var senderAddress = ConfigurationManager.AppSettings["EmailSenderAddress"];
             //var receiverName = ConfigurationManager.AppSettings["EmailReceiverName"];
             //var receiverAddress = ConfigurationManager.AppSettings["EmailReceiverAddress"];
-
+            EmailResult _emailResult = new EmailResult();
             try
             {
                 _EmailConfig.credential = GoogleWebAuthorizationBroker.AuthorizeAsync(
@@ -142,7 +172,7 @@ namespace ShareLuggage.Email
                 // use that as a working base
                 // the values Date and Message-ID have no bearing on the final email (or didn't to me) so have keep them as placeholders and haven't tried to replace them
 
-               // const string subject = "Email Subject";
+                // const string subject = "Email Subject";
 
                 // there are some issues around the body encoding/decoding
                 // this message decoded will have a '5' at the end
@@ -172,14 +202,21 @@ namespace ShareLuggage.Email
 
                 Message request = _EmailConfig.service.Users.Messages.Send(message, "me").Execute();
 
+                _emailResult.ResultCode=request.i
                 Console.WriteLine(
-                    string.IsNullOrEmpty(request.Id) ? "Issue sending, returned id: {0}" : "Email looks good, id populated: {0}",
+                    string.IsNullOrEmpty(request.Id) ? _emailResult.ResultCode = "200" && "Issue sending, returned id: {0}" : "Email looks good, id populated: {0}",
                     request.Id);
 
 
 
             }
-       
+            catch (Exception Ex)
+            {
+
+
             }
-          
+
+        }
+
     }
+}
