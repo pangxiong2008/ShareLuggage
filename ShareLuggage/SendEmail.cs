@@ -4,15 +4,54 @@ using System.Text;
 using System.Threading;
 using Google.Apis.Auth.OAuth2;
 using Google.Apis.Gmail.v1;
+using Google.Apis.Gmail.v1.Data;
 using Google.Apis.Services;
 
 namespace ShareLuggage.Email
 {
-    abstract class Email
+    public abstract class Email
     {
-        abstract public void Create_draft();
-        abstract public void Send_Email();
+        public abstract void Email_create();
+
+    }
+   public   class Email_goolge:Email
+    {
+        // abstract public void Create_draft();
+        private string type;
+       public  Email_goolge()
+        {
+            type = "simple";
+        }
+       public  Email_goolge(string Type)
+        {
+            type = Type;
+        }
+
+        public override void Email_create()
+        {
+
+        }
+        
+
       
+    }
+    public class EmailSimpleFactory
+    {
+        public Email createEmail(string Type)
+        {
+            Email _email = null;
+            if (Type.Equals("Gmail_Connect"))
+            {
+                _email = new Email_goolge();
+            }
+            else if (Type.Equals("Gmail_SetPassword"))
+            {
+                _email = new Email_goolge(Type);
+
+            }
+            return _email;
+        }
+
     }
     class Email_raw
     {
@@ -25,8 +64,35 @@ namespace ShareLuggage.Email
         public string body { set; get; }
     }
 
-      
 
+    public sealed class Singleton_sendEmail
+    {
+        private static  Singleton_sendEmail single_gmail = new Singleton_sendEmail();
+
+        private static object Lock = new object();
+        private Singleton_sendEmail()
+        { }
+        public static Singleton_sendEmail Single_gmail
+        {
+            get
+            {
+                if (single_gmail == null)
+                {
+                    lock (Lock)
+                    {
+                        if (single_gmail == null)
+                        { 
+                            single_gmail = new Singleton_sendEmail();
+                        }
+                    }
+
+                }
+                return single_gmail;
+            }
+
+        } 
+
+    }
    
     class EmailConfig
     {
@@ -39,16 +105,15 @@ namespace ShareLuggage.Email
     }
 
 
+
     class Send_Gmail
     {
-        private void send(Email_raw _Email_raw)
+        private void send(Email_raw _Email_raw, EmailConfig _EmailConfig)
         {
-            EmailConfig _EmailConfig = new EmailConfig();
-           // Email_raw _Email_raw = new Email_raw();
-
-            _EmailConfig.clientId = "739330450434-e4cq0bonlglucdnmodofbjg09qj26u36.apps.googleusercontent.com";
+           // EmailConfig _EmailConfig = new EmailConfig();
+           // _EmailConfig.clientId = "739330450434-e4cq0bonlglucdnmodofbjg09qj26u36.apps.googleusercontent.com";
             //  var clientSecret = ConfigurationManager.AppSettings["ClientSecret"];
-            _EmailConfig.clientSecret = "dfDfdOJeobb1x0VNrTDHsEGO";
+           // _EmailConfig.clientSecret = "dfDfdOJeobb1x0VNrTDHsEGO";
             //var senderName = ConfigurationManager.AppSettings["EmailSenderName"];
             //var senderAddress = ConfigurationManager.AppSettings["EmailSenderAddress"];
             //var receiverName = ConfigurationManager.AppSettings["EmailReceiverName"];
@@ -69,7 +134,7 @@ namespace ShareLuggage.Email
                 _EmailConfig.service = new GmailService(new BaseClientService.Initializer
                 {
                     HttpClientInitializer = _EmailConfig.credential,
-                    ApplicationName = "Gmail API",
+                    ApplicationName = _EmailConfig.ApplicationName,
                 });
 
                 // only the raw parameter of the message resource needs set, see: http://stackoverflow.com/questions/24460422/how-to-send-a-message-successfully-using-the-new-gmail-rest-api
@@ -90,15 +155,12 @@ namespace ShareLuggage.Email
                 //receiverAddress = "wuxiaonong@gmail.com";
                 // format the message
                 var text = string.Format("From: {0} <{1}>\nTo: {2} <{3}>\nSubject: {4}\nDate: Fri, 21 Nov 1997 09:55:06 -0600\nMessage-ID: <1234@local.machine.example>\n\n{5}",
-                    senderName,
-                    senderAddress,
-                    receiverName,
-                    receiverAddress,
-                    subject,
-                    body);
-
-                Console.WriteLine("Send email:\n{0}", text);
-
+                    _Email_raw.senderName,
+                    _Email_raw.senderAddress,
+                    _Email_raw.receiverName,
+                    _Email_raw.receiverAddress,
+                    _Email_raw.subject,
+                    _Email_raw.body);
                 // must be base64 encoded but also web safe and also initially UTF8
                 // http://stackoverflow.com/questions/24460422/how-to-send-a-message-successfully-using-the-new-gmail-rest-api
                 // http://stackoverflow.com/questions/13017703/java-and-net-base64-conversion-confusion
@@ -106,9 +168,9 @@ namespace ShareLuggage.Email
 
                 Console.WriteLine("Raw email:\n{0}", encodedText);
 
-                var message = new Message { Raw = encodedText };
+                Message message = new Message { Raw = encodedText };
 
-                var request = service.Users.Messages.Send(message, "me").Execute();
+                Message request = _EmailConfig.service.Users.Messages.Send(message, "me").Execute();
 
                 Console.WriteLine(
                     string.IsNullOrEmpty(request.Id) ? "Issue sending, returned id: {0}" : "Email looks good, id populated: {0}",
