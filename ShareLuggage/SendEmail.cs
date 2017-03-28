@@ -202,16 +202,21 @@ namespace ShareLuggage.Email
 
                 Message request = _EmailConfig.service.Users.Messages.Send(message, "me").Execute();
 
-                _emailResult.ResultCode=request.i
-                Console.WriteLine(
-                    string.IsNullOrEmpty(request.Id) ? _emailResult.ResultCode = "200" && "Issue sending, returned id: {0}" : "Email looks good, id populated: {0}",
-                    request.Id);
-
-
+                _emailResult.ResultCode="200";
+                //Console.WriteLine(
+                //    string.IsNullOrEmpty(request.Id) ? "Issue sending, returned id: {0}" : "Email looks good, id populated: {0}",
+                //    request.Id);
+                //Console.WriteLine(
+                _emailResult.ResultText = string.IsNullOrEmpty(request.Id) ? "Failed" : "Success";
+                _emailResult.ResultCode=string.Format( string.IsNullOrEmpty(request.Id) ? "Issue sending, returned id: {0}" : "Email looks good, id populated: {0}",request.Id);
 
             }
             catch (Exception Ex)
             {
+                _emailResult.ResultCode = "437";
+                
+                _emailResult.ResultText = "Failed";
+                _emailResult.ResultCode = "SystemError";
 
 
             }
