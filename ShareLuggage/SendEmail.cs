@@ -9,6 +9,18 @@ using Google.Apis.Services;
 
 namespace ShareLuggage.Email
 {
+    public interface IEmailCentre
+    {
+        Email_raw _Email_create { get; set; }
+        EmailConfig _EmailConfig { get; set; }
+        EmailResult _EmailResult { get; set; }
+        string  Email_create();
+
+
+    }
+
+
+
     public abstract class Email
     {
         public abstract void Email_create();
@@ -35,6 +47,8 @@ namespace ShareLuggage.Email
 
 
     }
+
+
     public class EmailSimpleFactory
     {
         public static Email createEmail(string Type)
@@ -53,7 +67,7 @@ namespace ShareLuggage.Email
         }
 
     }
-    class Email_raw
+   public  class Email_raw
     {
         // clientSecret = "dfDfdOJeobb1x0VNrTDHsEGO";
         public string senderName { get; set; }
@@ -67,7 +81,7 @@ namespace ShareLuggage.Email
 
     public sealed class Singleton_sendEmail
     {
-        private static Singleton_sendEmail single_gmail = new Singleton_sendEmail();
+        private static Singleton_sendEmail single_gmail;
 
         private static object Lock = new object();
         private Singleton_sendEmail()
@@ -116,7 +130,7 @@ namespace ShareLuggage.Email
 
     }
 
-    class EmailConfig
+   public  class EmailConfig
     {
         public string clientId { get; set; }
         //public string clientId = "739330450434-e4cq0bonlglucdnmodofbjg09qj26u36.apps.googleusercontent.com";
@@ -126,7 +140,7 @@ namespace ShareLuggage.Email
         public GmailService service { get; set; }
     }
 
-    class EmailResult
+   public  class EmailResult
     {
         public string ResultCode { get; set; }
         public string ResultText { get; set; }
@@ -220,6 +234,7 @@ namespace ShareLuggage.Email
 
 
             }
+            return _emailResult;
 
         }
 
