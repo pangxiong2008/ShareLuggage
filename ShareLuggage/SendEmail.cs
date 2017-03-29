@@ -20,7 +20,42 @@ namespace ShareLuggage.Email
     }
 
 
+    //public class PXGpaymentCharge
+    //{
+    //    public void InboundData_PXG_ADC_Charged()
+    //    {
+    //        ChargedPayment Purchase_create = ChargeSimpleFactory.CreatePurchase(AppType);
 
+    //        response = Purchase_create.run(ANI, SSID, Amount, Gateway, SubProfile);
+    //    }
+
+    //}
+
+
+    //public abstract class ChargedPayment
+    //{
+    //    public abstract string[] run(String ID, string Type);
+    //    public abstract string[] run(string ANI, string SSID, string Amount, string Gateway, string SubProfile);
+    //}
+    //public class Charge_Paybyphone : ChargedPayment
+    //{
+
+    //}
+
+
+    //public class ChargeSimpleFactory
+    //{
+    //    public static ChargedPayment CreatePurchase(string Type)
+    //    {
+    //        ChargedPayment charged_Payment = null;
+    //        if (Type.Equals("PayByPhone"))
+    //        {
+    //            charged_Payment = new Charge_Paybyphone();
+    //        }
+          
+    //        return charged_Payment;
+    //    }
+    //}
     public abstract class Email
     {
         public abstract void Email_create();
