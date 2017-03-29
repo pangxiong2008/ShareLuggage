@@ -220,6 +220,7 @@ namespace ShareLuggage.Email
 
 
             }
+            return _emailResult;
 
         }
 
