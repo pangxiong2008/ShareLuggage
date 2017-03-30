@@ -138,7 +138,7 @@ namespace ShareLuggage.Email
 
         public override void Email_write()
         {
-            Singleton_sendEmail.Single_gmail.
+            _EmailResult=Singleton_sendEmail.Single_gmail.run(_EmailRaw, _EmailConfig);
         }
 
 
@@ -185,38 +185,39 @@ namespace ShareLuggage.Email
             }
 
         }
-
-    }
-
-
-    public class SingeCharge
-    {
-        private static SingeCharge SendSms;
-
-        private static readonly object Locker = new object();
-        private SingeCharge()
-        { }
-        public static SingeCharge send()
-        {
-            lock (Locker)
-            {
-                if (SendSms == null)
-                {
-                    SendSms = new SingeCharge();
-                }
-            }
-            return SendSms;
-        }
-        private EmailResult run(Email_raw _Email_raw, EmailConfig _EmailConfig)
+        public  EmailResult run(Email_raw _Email_raw, EmailConfig _EmailConfig)
         {
             Send_Gmail _Send_Gmail = new Send_Gmail();
             EmailResult _EmailResult = new EmailResult();
-            _EmailResult=_Send_Gmail.send(_Email_raw, _EmailConfig);
+            _EmailResult = _Send_Gmail.send(_Email_raw, _EmailConfig);
             return _EmailResult;
 
         }
 
     }
+
+
+    //public class SingeCharge
+    //{
+    //    private static SingeCharge SendSms;
+
+    //    private static readonly object Locker = new object();
+    //    private SingeCharge()
+    //    { }
+    //    public static SingeCharge send()
+    //    {
+    //        lock (Locker)
+    //        {
+    //            if (SendSms == null)
+    //            {
+    //                SendSms = new SingeCharge();
+    //            }
+    //        }
+    //        return SendSms;
+    //    }
+        
+
+    //}
 
    public  class EmailConfig
     {
