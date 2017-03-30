@@ -11,15 +11,78 @@ namespace ShareLuggage.Email
 {
     public interface IEmailCentre
     {
-        Email_raw _Email_create { get; set; }
+        Email_raw _EmailRaw{ get; set; }
         EmailConfig _EmailConfig { get; set; }
         EmailResult _EmailResult { get; set; }
-        string  Email_create();
+        string  Email_create(string Type);
 
 
     }
+    public abstract class EmailCentre : IEmailCentre
+    {
+      public   abstract Email_raw _EmailRaw { set; get; }
+      public abstract EmailConfig _EmailConfig { get; set; }
+      public abstract EmailResult _EmailResult { get; set; }
+      public abstract string  Email_create(string Type);
+
+    }
+
+    class EmailShareLuggage : EmailCentre
+    {
+       public  override Email_raw _EmailRaw { set; get; }
+        public override  EmailConfig _EmailConfig { get; set; }
+        public override  EmailResult _EmailResult { get; set; }
+        public override  string  Email_create(string Type)
+        {
+            string result;
+            try
+            {
+                Email _email = EmailSimpleFactory.createEmail(Type);
+                _email._EmailConfig = _EmailConfig;
+                _email._EmailRaw = _EmailRaw;
+
+                _email.Email_write();
+                _EmailResult = _email._EmailResult;
+                result = "Success";
+            }
+            catch (Exception Ex)
+            {
+                _EmailResult.ResultCode = "437";
+                _EmailResult.ResultText = "Failed";
+                _EmailResult.ResultBody = "SystemError";
+                result = "Failed";
+            }
+            return result;
+        }
 
 
+    }
+    public abstract class Email
+    {
+        public abstract Email_raw _EmailRaw { set; get; }
+        public abstract EmailConfig _EmailConfig { get; set; }
+        public abstract EmailResult _EmailResult { get; set; }
+        public abstract void Email_write();
+
+    }
+    public class EmailSimpleFactory
+    {
+        public static Email createEmail(string Type)
+        {
+            Email _email = null;
+            if (Type.Equals("Gmail_Connect"))
+            {
+                _email = new Email_goolge();
+            }
+            else if (Type.Equals("Gmail_SetPassword"))
+            {
+                _email = new Email_goolge(Type);
+
+            }
+            return _email;
+        }
+
+    }
     //public class PXGpaymentCharge
     //{
     //    public void InboundData_PXG_ADC_Charged()
@@ -52,18 +115,17 @@ namespace ShareLuggage.Email
     //        {
     //            charged_Payment = new Charge_Paybyphone();
     //        }
-          
+
     //        return charged_Payment;
     //    }
     //}
-    public abstract class Email
-    {
-        public abstract void Email_create();
 
-    }
-    public class Email_goolge : Email
+    sealed class Email_goolge : Email
     {
         // abstract public void Create_draft();
+        public override Email_raw _EmailRaw { set; get; }
+        public override EmailConfig _EmailConfig { get; set; }
+        public override EmailResult _EmailResult { get; set; }
         private string type;
         public Email_goolge()
         {
@@ -74,9 +136,9 @@ namespace ShareLuggage.Email
             type = Type;
         }
 
-        public override void Email_create()
+        public override void Email_write()
         {
-
+            Singleton_sendEmail.Single_gmail.
         }
 
 
@@ -84,24 +146,7 @@ namespace ShareLuggage.Email
     }
 
 
-    public class EmailSimpleFactory
-    {
-        public static Email createEmail(string Type)
-        {
-            Email _email = null;
-            if (Type.Equals("Gmail_Connect"))
-            {
-                _email = new Email_goolge();
-            }
-            else if (Type.Equals("Gmail_SetPassword"))
-            {
-                _email = new Email_goolge(Type);
-
-            }
-            return _email;
-        }
-
-    }
+    
    public  class Email_raw
     {
         // clientSecret = "dfDfdOJeobb1x0VNrTDHsEGO";
@@ -162,6 +207,14 @@ namespace ShareLuggage.Email
             }
             return SendSms;
         }
+        private EmailResult run(Email_raw _Email_raw, EmailConfig _EmailConfig)
+        {
+            Send_Gmail _Send_Gmail = new Send_Gmail();
+            EmailResult _EmailResult = new EmailResult();
+            _EmailResult=_Send_Gmail.send(_Email_raw, _EmailConfig);
+            return _EmailResult;
+
+        }
 
     }
 
@@ -187,7 +240,7 @@ namespace ShareLuggage.Email
 
     class Send_Gmail
     {
-        private EmailResult send(Email_raw _Email_raw, EmailConfig _EmailConfig)
+        public  EmailResult send(Email_raw _Email_raw, EmailConfig _EmailConfig)
         {
             // EmailConfig _EmailConfig = new EmailConfig();
             // _EmailConfig.clientId = "739330450434-e4cq0bonlglucdnmodofbjg09qj26u36.apps.googleusercontent.com";
