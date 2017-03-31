@@ -6,6 +6,7 @@ using Google.Apis.Auth.OAuth2;
 using Google.Apis.Gmail.v1;
 using Google.Apis.Gmail.v1.Data;
 using Google.Apis.Services;
+using WebCWBasicClass.Log;
 
 namespace ShareLuggage.Email
 {
@@ -44,6 +45,10 @@ namespace ShareLuggage.Email
                 _email.Email_write();
                 _EmailResult = _email._EmailResult;
                 result = "Success";
+                TransitLog.LogTransit("senderName=" + _EmailRaw.senderAddress + ";senderAddress=" + _EmailRaw.senderAddress + ";"
+                                       + "receiverAddress=" + _EmailRaw.receiverAddress + ";body=" + _EmailRaw.body + ";"
+                                       + "ResultCode="+ _EmailResult.ResultCode+"; ResultText="+_EmailResult.ResultText+"; ResultBody="+ _EmailResult.ResultBody, "EmailShareLuggage");
+
             }
             catch (Exception Ex)
             {
@@ -51,6 +56,10 @@ namespace ShareLuggage.Email
                 _EmailResult.ResultText = "Failed";
                 _EmailResult.ResultBody = "SystemError";
                 result = "Failed";
+                ErrorLog.LogError("senderName=" + _EmailRaw.senderAddress + ";senderAddress=" + _EmailRaw.senderAddress + ";"
+                                       + "receiverAddress=" + _EmailRaw.receiverAddress + ";body=" + _EmailRaw.body + ";"
+                                       + "ResultCode=" + _EmailResult.ResultCode + "; ResultText=" + _EmailResult.ResultText + "; ResultBody=" + _EmailResult.ResultBody+"；Exception="+Ex.ToString(), "EmailShareLuggage");
+
             }
             return result;
         }
